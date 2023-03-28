@@ -17,8 +17,6 @@ uniform mat4 u_projection;
 //like a C program main is the main function
 void main() {
 
-  //TASK 1 and TASK 2-1
-
   gl_Position = u_projection * u_modelView
     * vec4(a_position, 1);
 

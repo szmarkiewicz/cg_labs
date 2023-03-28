@@ -111,7 +111,7 @@ function init(resources) {
   initQuadBuffer();
 
   // TASK 8-1
-  //set buffers for cube
+  initCubeBuffer();
 }
 
 function initQuadBuffer() {
@@ -148,6 +148,8 @@ function initCubeBuffer() {
  */
 function render(timeInMilliseconds) {
 
+
+
   //set background color to light gray
   gl.clearColor(0.9, 0.9, 0.9, 1.0);
   //clear the buffers for color and depth
@@ -162,9 +164,12 @@ function render(timeInMilliseconds) {
   gl.useProgram(shaderProgram);
 
   var projectionMatrix = defaultProjectionMatrix;
+
   // TASK 6
+  projectionMatrix = makeOrthographicProjectionMatrix(-0.5, 0.5, -0.5, 0.5, 0, 10);
 
   // TASK 7
+  projectionMatrix = makePerspectiveProjectionMatrix(fieldOfViewInRadians, canvasWidth/canvasHeight, 1, 10);
 
   gl.uniformMatrix4fv(projectionLocation, false, projectionMatrix);
 
@@ -175,6 +180,7 @@ function render(timeInMilliseconds) {
   renderQuad(sceneMatrix, viewMatrix);
 
   // TASK 8-2
+  renderRobot(sceneMatrix, viewMatrix);
 
   //request another render call as soon as possible
   requestAnimationFrame(render);
@@ -185,7 +191,14 @@ function render(timeInMilliseconds) {
 function renderQuad(sceneMatrix, viewMatrix) {
 
   //TASK 2-2 and TASK 3 and TASK 4
+  sceneMatrix = matrixMultiply(sceneMatrix, makeTranslationMatrix(0, -0.5, 0));
 
+  // TASK 3
+  sceneMatrix = matrixMultiply(sceneMatrix, makeScaleMatrix(0.5, 0.5, 1));
+
+  // TASK 4
+  sceneMatrix = matrixMultiply(sceneMatrix, makeXRotationMatrix(convertDegreeToRadians(45)));
+ 
   setUpModelViewMatrix(viewMatrix, sceneMatrix);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, quadVertexBuffer);
@@ -220,10 +233,12 @@ function renderRobot(sceneMatrix, viewMatrix) {
   var originSceneMatrix = sceneMatrix;
 
   // TASK 9 and 10
+  sceneMatrix = matrixMultiply(matrixMultiply(sceneMatrix, makeYRotationMatrix(convertDegreeToRadians(animatedAngle))), makeXRotationMatrix(convertDegreeToRadians(animatedAngle)));
 
   setUpModelViewMatrix(viewMatrix, sceneMatrix);
   // TASK 8-3
 
+  renderCube();
   // TASK 10-1
 
 }
@@ -236,6 +251,7 @@ function renderCube() {
 function calculateViewMatrix(viewMatrix) {
   //compute the camera's matrix
   // TASK 5
+  viewMatrix = lookAt(0, 3, 5, 0, 0, 0, 0, 1, 0);
   return viewMatrix;
 }
 
