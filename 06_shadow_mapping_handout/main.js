@@ -145,8 +145,8 @@ function createSceneGraph(gl, resources) {
 }
 
 function initRenderToTexture() {
-  var depthTextureExt = gl.getExtension("WEBGL_depth_texture");
-  if(!depthTextureExt) { alert('No depth texture support!!!'); return; }
+  //var depthTextureExt = gl.getExtension("WEBGL_depth_texture");
+  //if(!depthTextureExt) { alert('No depth texture support!!!'); return; }
 
   //generate color texture (required mainly for debugging and to avoid bugs in some WebGL platforms)
   renderTargetFramebuffer = gl.createFramebuffer();
@@ -164,11 +164,11 @@ function initRenderToTexture() {
   //create depth texture
   renderTargetDepthTexture = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, renderTargetDepthTexture);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT, framebufferWidth, framebufferHeight, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_SHORT, null);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT32F, framebufferWidth, framebufferHeight, 0, gl.DEPTH_COMPONENT, gl.FLOAT, null);
 
   //bind textures to framebuffer
   gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, renderTargetColorTexture, 0);
